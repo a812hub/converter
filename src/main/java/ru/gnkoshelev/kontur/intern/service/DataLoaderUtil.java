@@ -21,7 +21,7 @@ public class DataLoaderUtil {
 
         Map<String, String> unitToBaseUnit = store.getUnitToBaseUnit();
 
-        File file = Paths.get(pathToFile).toFile();
+        File file = getFile(pathToFile);
         BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
 
         String line;
@@ -149,5 +149,15 @@ public class DataLoaderUtil {
                 entry.setValue(newBaseUnit);
             }
         }
+    }
+
+    private static File getFile(String pathToFile) {
+        File file = Paths.get(pathToFile).toFile();
+        if (!file.exists()) {
+            if (pathToFile.startsWith("/") || pathToFile.startsWith("\\")) {
+                file = Paths.get(pathToFile.substring(1)).toFile();
+            }
+        }
+        return file;
     }
 }

@@ -9,7 +9,6 @@ package ru.gnkoshelev.kontur.intern;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.File;
 import java.nio.file.Paths;
 
 @SpringBootApplication
@@ -27,12 +26,17 @@ public class App {
                     "\t(example: java -jar universal-converter-1.0.0.jar path/to/file.csv)\r\n");
             return false;
         }
-        File file = Paths.get(args[0]).toFile();
-        if (!file.exists()) {
-            System.out.println("\r\nFile Not Found: " + file.getAbsolutePath() + "\r\n" +
-                    "Enter an absolute path to the file or a relative path without the '/' or '\\' at the beginning.\r\n");
-            return false;
+        return isFileExist(args[0]);
+    }
+
+    private static boolean isFileExist(String pathToFile) {
+        if (Paths.get(pathToFile).toFile().exists() ||
+                ((pathToFile.startsWith("/") || pathToFile.startsWith("\\")) && Paths.get(pathToFile.substring(1)).toFile().exists())) {
+            return true;
         }
-        return true;
+        System.out.println("\r\nFile Not Found: " + pathToFile + "\r\n" +
+                "\tEnter an absolute path to the file.\r\n" +
+                "\tOr enter a relative path without the '/' at the beginning.\r\n");
+        return false;
     }
 }
